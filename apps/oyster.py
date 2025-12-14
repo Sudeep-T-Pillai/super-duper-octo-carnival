@@ -69,7 +69,7 @@ class DatabaseGateway:
 def format_scraper_result(raw_data: dict, page_alias: str) -> dict:
     print("[Part C] Formatting merged Apify data...")
 
-    # 1. Map Metadata (Same as before)
+    # 1. Map Metadata 
     formatted_data = {
         "page_alias": page_alias,
         "linkedin_internal_id": str(raw_data.get("companyId")),

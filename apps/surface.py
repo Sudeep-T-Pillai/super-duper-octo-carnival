@@ -60,7 +60,7 @@ async def search_companies(
     page: int = 1,
     limit: int = 10
 ):
-    # Construct the internal URL (Modify the base URL to match your Brain's port)
+    # Construct the internal URL
     BRAIN_SEARCH_URL = "http://localhost:8000/internal/search"
     
     params = {
