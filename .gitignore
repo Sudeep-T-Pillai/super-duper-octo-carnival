@@ -1,19 +1,19 @@
-# --- Secrets (Critical) ---
+
 apps/CONSTANTS.py
 .env
 
-# --- Python Virtual Environment (Heavy folders) ---
+
 venv/
 env/
 .venv/
 
-# --- Python Compiled Files (Junk) ---
+
 __pycache__/
 *.pyc
 
-# --- IDE Settings (Optional) ---
+
 .vscode/
 .idea/
 
-# --- Mac/Linux Junk ---
+
 .DS_Store

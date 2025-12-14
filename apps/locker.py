@@ -64,3 +64,42 @@ class DatabaseGateway:
             
         else:
             return {"status": "error", "message": "Invalid Flag"}
+
+    def search(self, filters: dict):
+        query = self.db.query(Page)
+
+        # 1. Apply Filters
+        if filters.get("name"):
+            query = query.filter(Page.name.ilike(f"%{filters['name']}%"))
+        
+        if filters.get("industry"):
+            query = query.filter(Page.industry.ilike(f"%{filters['industry']}%"))
+            
+        if filters.get("min_followers"):
+            query = query.filter(Page.follower_count >= filters["min_followers"])
+            
+        if filters.get("max_followers"):
+            query = query.filter(Page.follower_count <= filters["max_followers"])
+
+        # 2. Pagination Logic
+        page_num = filters.get("page", 1)
+        limit = filters.get("limit", 10)
+        offset = (page_num - 1) * limit
+
+        # 3. Execute
+        total_count = query.count()
+        results = query.offset(offset).limit(limit).all()
+
+        return {
+            "total_matches": total_count,
+            "page": page_num,
+            "limit": limit,
+            "results": [
+                {
+                    "name": p.name,
+                    "industry": p.industry,
+                    "followers": p.follower_count,
+                    "id": p.page_alias
+                } for p in results
+            ]
+        }

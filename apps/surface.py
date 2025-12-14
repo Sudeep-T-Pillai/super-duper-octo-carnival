@@ -50,6 +50,37 @@ async def get_page_insights(url_or_id: str = Query(..., description="LinkedIn Pa
                 status_code=503, 
                 detail=f"Failed to connect to Intermediary Service: {exc}"
             )
+        
+@app.get("/api/v1/page/search")
+async def search_companies(
+    name: str = Query(None, description="Search by company name"),
+    industry: str = Query(None, description="Filter by industry"),
+    min_followers: int = Query(None, description="Minimum follower count"),
+    max_followers: int = Query(None, description="Maximum follower count"),
+    page: int = 1,
+    limit: int = 10
+):
+    # Construct the internal URL (Modify the base URL to match your Brain's port)
+    BRAIN_SEARCH_URL = "http://localhost:8000/internal/search"
+    
+    params = {
+        "name": name,
+        "industry": industry,
+        "min_followers": min_followers,
+        "max_followers": max_followers,
+        "page": page,
+        "limit": limit
+    }
+    
+    # Remove None values
+    clean_params = {k: v for k, v in params.items() if v is not None}
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(BRAIN_SEARCH_URL, params=clean_params)
+            return response.json()
+        except httpx.RequestError:
+            raise HTTPException(status_code=503, detail="Brain service unavailable")       
 
 # --- TEST ---
 @app.post("/internal/processor")

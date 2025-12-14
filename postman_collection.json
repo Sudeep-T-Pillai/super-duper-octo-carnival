@@ -1,0 +1,43 @@
+{
+	"info": {
+		"name": "Super Duper Octo Carnival",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Insights (Scrape/Cache)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8001/api/v1/page/insights?url_or_id=deepsolv",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8001",
+					"path": ["api", "v1", "page", "insights"],
+					"query": [
+						{ "key": "url_or_id", "value": "deepsolv" }
+					]
+				}
+			}
+		},
+		{
+			"name": "Search & Filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8001/api/v1/page/search?min_followers=100&industry=Software",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8001",
+					"path": ["api", "v1", "page", "search"],
+					"query": [
+						{ "key": "min_followers", "value": "100" },
+						{ "key": "industry", "value": "Software" }
+					]
+				}
+			}
+		}
+	]
+}

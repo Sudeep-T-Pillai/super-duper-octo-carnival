@@ -8,9 +8,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
-      # This maps your local data to the container (persistence)
+      
       - db_data:/var/lib/mysql
-      # MAGIC: This loads your 'init.sql' automatically!
+
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:Z
     ports:
       - "3307:3306"

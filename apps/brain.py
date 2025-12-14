@@ -3,6 +3,7 @@ from apps.anatomy import SessionLocal, init_db
 from apps.locker import DatabaseGateway
 from apps.oyster import format_scraper_result
 from apps.tentacles import get_linkedin_data 
+from fastapi import Request
 
 app = FastAPI()
 
@@ -43,3 +44,21 @@ def process_request(payload: dict, db = Depends(get_db)):
         return formatted_payload["data"]
         
     return {"error": "Processing Failed"}
+
+@app.get("/internal/search")
+def search_registry(request: Request, db = Depends(get_db)):
+    # Extract query params
+    params = dict(request.query_params)
+    
+    # Convert numeric params
+    filters = {
+        "name": params.get("name"),
+        "industry": params.get("industry"),
+        "min_followers": int(params["min_followers"]) if params.get("min_followers") else None,
+        "max_followers": int(params["max_followers"]) if params.get("max_followers") else None,
+        "page": int(params.get("page", 1)),
+        "limit": int(params.get("limit", 10))
+    }
+
+    locker = DatabaseGateway(db)
+    return locker.search(filters)
