@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # 1. The Database Container
+  db:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      # This maps your local data to the container (persistence)
+      - db_data:/var/lib/mysql
+      # MAGIC: This loads your 'init.sql' automatically!
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:Z
+    ports:
+      - "3307:3306"
+    networks:
+      - octo-net
+
+  # 2. The Python Application Container
+  app:
+    build: .
+    depends_on:
+      - db  # Wait for DB to start
+    ports:
+      - "8000:8000" # Brain
+      - "8001:8001" # Surface
+    environment:
+      # Tell anatomy.py to look for the host named 'db', not 'localhost'
+      - DATABASE_URL=mysql+pymysql://dev_user:password123@db/linkedin_insights_db
+    networks:
+      - octo-net
+
+volumes:
+  db_data:
+
+networks:
+  octo-net:
